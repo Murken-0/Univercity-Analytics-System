@@ -1,0 +1,105 @@
+version: "2"
+
+services:
+  postgres:
+    image: postgres:16.0
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: practice
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    networks:
+      - databases_net
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_vol:/var/lib/postgresql/data
+    command: ["postgres", "-c", "log_statement=all", "-c", "log_destination=stderr"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d practice -U admin"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  mongo:
+    image: mongo:7.0
+    container_name: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    networks:
+      - databases_net
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_vol:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok'
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  redis:
+    image: redis:7.2.1-alpine
+    container_name: redis
+    restart: always
+    networks:
+      - databases_net
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_vol:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+  
+  neo4j:
+    image: neo4j:5.12.0
+    container_name: neo4j
+    environment:
+      NEO4J_AUTH: none
+    networks:
+      - databases_net
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j_vol:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider localhost:7474 || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+  
+  elasticsearch:
+    image: bitnami/elasticsearch:8.10.2
+    container_name: elasticsearch
+    restart: always
+    environment:
+      discovery.type: single-node
+    networks:
+      - databases_net
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch_vol:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl localhost:9200/_cat/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  postgres_vol:
+  mongo_vol:
+  redis_vol:
+  neo4j_vol:
+  elasticsearch_vol:
+
+networks:
+  databases_net:
