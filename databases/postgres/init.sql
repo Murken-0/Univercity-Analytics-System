@@ -1,4 +1,12 @@
 --tables
+CREATE TABLE schedule(
+    id SERIAL PRIMARY KEY,
+    class_id BIGINT NOT NULL,
+    group_id BIGINT NOT NULL,
+    date_time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    pair_number INTEGER NOT NULL
+);
+
 CREATE TABLE departments(
     id SERIAL PRIMARY KEY,
     code TEXT NOT NULL,
@@ -9,9 +17,7 @@ CREATE TABLE departments(
 CREATE TABLE courses(
     id SERIAL PRIMARY KEY,
     title TEXT NOT NULL,
-    description TEXT NOT NULL,
     scheduled_hours INTEGER NOT NULL,
-    special_department BOOLEAN NOT NULL,
     department_id BIGINT NOT NULL
 );
 
@@ -23,86 +29,113 @@ CREATE TABLE institutes(
 
 CREATE TABLE attendances(
     id SERIAL,
-    class_id BIGINT NOT NULL,
+    schedule_id BIGINT NOT NULL,
     student_id BIGINT NOT NULL,
     attended BOOLEAN NOT NULL,
-    class_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-    CONSTRAINT attendances_pkey PRIMARY KEY (id, class_date)
-) PARTITION BY RANGE (class_date);
+    schedule_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    CONSTRAINT attendances_pkey PRIMARY KEY (id, schedule_date)
+) PARTITION BY RANGE (schedule_date);
 
 CREATE TABLE students(
     id SERIAL PRIMARY KEY,
-    fio TEXT NOT NULL,
-    code VARCHAR(6) NOT NULL UNIQUE,
+    fullname TEXT NOT NULL,
+    code VARCHAR(6) NOT NULL,
     group_id BIGINT NOT NULL
 );
 
 CREATE TABLE specialities(
     id SERIAL PRIMARY KEY,
     code TEXT NOT NULL,
-    title TEXT NOT NULL,
-    department_id BIGINT NOT NULL
+    title TEXT NOT NULL
 );
 
-CREATE TABLE student_course(
+CREATE TABLE group_course(
     id SERIAL PRIMARY KEY,
-    student_id BIGINT NOT NULL,
-    course_id BIGINT NOT NULL
+    group_id BIGINT NOT NULL,
+    course_id BIGINT NOT NULL,
+    special BOOLEAN NOT NULL
+);
+
+CREATE TABLE class_type(
+    id SERIAL PRIMARY KEY,
+    type TEXT NOT NULL
+);
+
+CREATE TABLE department_speciality(
+    id SERIAL PRIMARY KEY,
+    department_id BIGINT NOT NULL,
+    speciality_id BIGINT NOT NULL
 );
 
 CREATE TABLE groups(
     id SERIAL PRIMARY KEY,
     title TEXT NOT NULL,
-    speciality_id BIGINT NOT NULL
+    speciality_id BIGINT NOT NULL,
+    department_id BIGINT NOT NULL
 );
 
 CREATE TABLE classes(
     id SERIAL PRIMARY KEY,
-    type VARCHAR(255) CHECK (type IN('lection', 'practice')) NOT NULL,
-    date TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
-    description TEXT NOT NULL,
+    type_id INTEGER NOT NULL,
+    title TEXT NOT NULL,
     equipment TEXT NOT NULL,
     course_id BIGINT NOT NULL
 );
 
-CREATE TABLE universities(
+CREATE TABLE class_materials(
     id SERIAL PRIMARY KEY,
-    title TEXT NOT NULL,
-    inn BIGINT NOT NULL
+    class_id BIGINT NOT NULL,
+    file TEXT NOT NULL
 );
 
---foreign keys
+CREATE TABLE universities(
+    id SERIAL PRIMARY KEY,
+    title TEXT NOT NULL
+);
+
 ALTER TABLE
-    student_course ADD CONSTRAINT student_course_course_id_foreign FOREIGN KEY(course_id) REFERENCES courses(id);
+    department_speciality ADD CONSTRAINT department_speciality_speciality_id_foreign FOREIGN KEY(speciality_id) REFERENCES specialities(id);
 ALTER TABLE
-    student_course ADD CONSTRAINT student_course_student_id_foreign FOREIGN KEY(student_id) REFERENCES students(id);
+    group_course ADD CONSTRAINT group_course_course_id_foreign FOREIGN KEY(course_id) REFERENCES courses(id);
+ALTER TABLE
+    groups ADD CONSTRAINT groups_department_id_foreign FOREIGN KEY(department_id) REFERENCES departments(id);
 ALTER TABLE
     attendances ADD CONSTRAINT attendances_student_id_foreign FOREIGN KEY(student_id) REFERENCES students(id);
 ALTER TABLE
-    attendances ADD CONSTRAINT attendances_class_id_foreign FOREIGN KEY(class_id) REFERENCES classes(id);
+    attendances ADD CONSTRAINT attendances_schedule_id_foreign FOREIGN KEY(schedule_id) REFERENCES schedule(id);
+ALTER TABLE
+    departments ADD CONSTRAINT departments_institute_id_foreign FOREIGN KEY(institute_id) REFERENCES institutes(id);
+ALTER TABLE
+    department_speciality ADD CONSTRAINT department_speciality_department_id_foreign FOREIGN KEY(department_id) REFERENCES departments(id);
 ALTER TABLE
     groups ADD CONSTRAINT groups_speciality_id_foreign FOREIGN KEY(speciality_id) REFERENCES specialities(id);
 ALTER TABLE
+    group_course ADD CONSTRAINT group_course_group_id_foreign FOREIGN KEY(group_id) REFERENCES groups(id);
+ALTER TABLE
+    classes ADD CONSTRAINT classes_type_id_foreign FOREIGN KEY(type_id) REFERENCES class_type(id);
+ALTER TABLE
     students ADD CONSTRAINT students_group_id_foreign FOREIGN KEY(group_id) REFERENCES groups(id);
+ALTER TABLE
+    schedule ADD CONSTRAINT schedule_class_id_foreign FOREIGN KEY(class_id) REFERENCES classes(id);
 ALTER TABLE
     courses ADD CONSTRAINT courses_department_id_foreign FOREIGN KEY(department_id) REFERENCES departments(id);
 ALTER TABLE
     classes ADD CONSTRAINT classes_course_id_foreign FOREIGN KEY(course_id) REFERENCES courses(id);
 ALTER TABLE
-    specialities ADD CONSTRAINT specialities_department_id_foreign FOREIGN KEY(department_id) REFERENCES departments(id);
+    class_materials ADD CONSTRAINT class_materials_class_id_foreign FOREIGN KEY(class_id) REFERENCES classes(id);
 ALTER TABLE
     institutes ADD CONSTRAINT institutes_university_id_foreign FOREIGN KEY(university_id) REFERENCES universities(id);
 ALTER TABLE
-    departments ADD CONSTRAINT departments_institute_id_foreign FOREIGN KEY(institute_id) REFERENCES institutes(id);
+    schedule ADD CONSTRAINT schedule_group_id_foreign FOREIGN KEY(group_id) REFERENCES groups(id);
 
-CREATE OR REPLACE PROCEDURE insert_attendances(student_i BIGINT, class_i BIGINT, attended BOOLEAN) LANGUAGE plpgsql 
+CREATE OR REPLACE PROCEDURE insert_attendances(student_i BIGINT, schedule_i BIGINT, attended BOOLEAN) LANGUAGE plpgsql 
 AS $$
 DECLARE
     _date TIMESTAMP WITHOUT TIME ZONE;
 BEGIN
-_date := (SELECT date FROM classes WHERE id = class_i);
-INSERT INTO attendances(student_id, class_id, attended, class_date)
-    VALUES (student_i, class_i, attended, _date);
+_date := (SELECT date FROM schedule WHERE id = schedule_i);
+INSERT INTO attendances(student_id, schedule_id, attended, schedule_date)
+    VALUES (student_i, schedule_i, attended, _date);
 END
 $$;
 
@@ -156,7 +189,7 @@ DECLARE
     _max_date date;
 BEGIN
 NEW.class_date := (SELECT date FROM classes WHERE id = NEW.class_id);
-_tbl := to_char(NEW.class_date, '"visits_y"IYYY_"w"IW');
+_tbl := to_char(NEW.class_date, 'visits_yIYYY_wIW');
 _rec_date := NEW.class_date::date;
 _min_date := date_trunc('week', NEW.class_date)::date;
 _max_date := date_trunc('week', NEW.class_date)::date + 7;
