@@ -133,7 +133,7 @@ AS $$
 DECLARE
     _date TIMESTAMP WITHOUT TIME ZONE;
 BEGIN
-_date := (SELECT date FROM schedule WHERE id = schedule_i);
+_date := (SELECT date_time FROM schedule WHERE id = schedule_i);
 INSERT INTO attendances(student_id, schedule_id, attended, schedule_date)
     VALUES (student_i, schedule_i, attended, _date);
 END

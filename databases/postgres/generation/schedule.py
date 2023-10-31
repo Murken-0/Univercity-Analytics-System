@@ -2,6 +2,7 @@ import random
 from datetime import datetime, timedelta
 import psycopg2
 
+"""
 descriptions = ['Агентство по информационной безопасности', 'Аутсорсинг', 
 'Аутентификация', 'Биг дата', 'Бизнес-анализ', 'Веб-разработка', 'Глубокое обучение', 
 'Девопс', 'Девелопер', 'Дизайн интерфейса', 'Дизайн пользовательского опыта', 'Кодировка', 
@@ -48,3 +49,27 @@ for course in courses:
 
 with open("insert_classes.sql", "a") as file:
     file.write(query)
+"""
+start_date = datetime.strptime("2022-02-07", '%Y-%m-%d')
+end_date = datetime.strptime("2022-06-11", '%Y-%m-%d')
+delta = int((end_date - start_date).days / 16)
+dates = [start_date + timedelta(days=i * delta) for i in range(16)]
+
+connection = psycopg2.connect(host='localhost', port='5432', dbname='practice', user='admin', password='admin')
+cursor = connection.cursor()
+query = f"INSERT INTO schedule (class_id, group_id, date, pair_number) VALUES "
+
+for course_id in range(1, 49):
+    cursor.execute(f"SELECT id FROM classes WHERE course_id = {course_id}")
+    classes = [cl[0] for cl in cursor.fetchall()]
+    for i, cl in enumerate(classes):
+        cursor.execute(f"SELECT groups.id FROM classes JOIN courses ON classes.course_id = courses.id JOIN group_course ON group_course.course_id = courses.id JOIN groups ON group_course.group_id = groups.id WHERE classes.id = {cl}")
+        groups = [gr[0] for gr in cursor.fetchall()]
+        for gr in groups:
+            pair = random.randint(1,6)
+            query += f"\n({cl}, {gr}, '{dates[i]}', {pair}),"
+
+with open("sheldue.sql", "w") as file:
+    file.write(query)
+
+connection.close()

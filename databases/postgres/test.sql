@@ -39,10 +39,14 @@ CALL insert_attendances(1, 1, True);
 
 SELECT group_id, COUNT(*) FROM students, groups WHERE students.group_id = groups.id GROUP BY group_id ORDER BY group_id
 
-SELECT classes.id FROM classes 
+SELECT groups.id FROM classes 
 JOIN courses ON classes.course_id = courses.id
-JOIN student_course ON student_course.course_id = courses.id
-JOIN students ON student_course.student_id = students.id
-WHERE students.id = 501;
+JOIN group_course ON group_course.course_id = courses.id
+JOIN groups ON group_course.group_id = groups.id
+WHERE classes.id = 50;
+
+SELECT students.id, schedule.id FROM schedule
+JOIN groups ON groups.id = schedule.group_id
+JOIN students on groups.id = students.group_id;
 
 SELECT id FROM students WHERE group_id IN (1, 2, 5);
