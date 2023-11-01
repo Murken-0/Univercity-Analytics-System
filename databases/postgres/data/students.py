@@ -1,24 +1,42 @@
 import random
 import string
+import psycopg2
 
-def generate_student_data():
+def insert_students():
     surnames = ["Иванов", "Петров", "Сидоров", "Смирнов", "Васильев"]
     names = ["Иван", "Петр", "Алексей", "Дмитрий", "Сергей"]
     patronymics = ["Иванович", "Петрович", "Алексеевич", "Дмитриевич", "Сергеевич"]
 
-    insert_query = "INSERT INTO students (fullname, code, group_id) VALUES\n"
+    connection = psycopg2.connect(
+    host="localhost",
+    port="5432",
+    database="practice",
+    user="admin",
+    password="admin"
+    )
+    cursor = connection.cursor()
+    cursor.execute("SELECT id FROM groups")
+    groups = [i[0] for i in cursor.fetchall()]
+
+    query = "INSERT INTO students (fullname, code, group_id) VALUES\n"
     for _ in range(500):
         surname = random.choice(surnames)
         name = random.choice(names)
         patronymic = random.choice(patronymics)
         student_id = generate_student_id()
-        group_id = random.randint(16, 30)
+        group_id = random.choice(groups)
 
-        insert_query += f"('{surname} {name} {patronymic}', '{student_id}', {group_id}), \n"
+        query += f"('{surname} {name} {patronymic}', '{student_id}', {group_id}),\n"
+    query = query[:-2]
 
-    filename = "students.sql"
-    with open(filename, "w") as file:
-        file.write(insert_query)
+    cursor.execute(query)
+    connection.commit()
+    connection.close()
+
+    with open("postgres/data/sql/students.sql", "w") as file:
+        file.write(query + ';')
+
+    print('Postgres | Таблица students заполнена')
 
 def generate_student_id():
     digits = string.digits
@@ -35,5 +53,3 @@ def generate_student_id():
         student_id += symbol
 
     return student_id
-
-generate_student_data()

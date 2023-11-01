@@ -1,14 +1,29 @@
 from datetime import datetime, timedelta
+import psycopg2
 
-year = 2022
+def create_partitions():
+    connection = psycopg2.connect(
+    host="localhost",
+    port="5432",
+    database="practice",
+    user="admin",
+    password="admin"
+    )
+    cursor = connection.cursor()
 
-filename = "partition_instructions.sql"
-with open(filename, "w") as file:
+    year = 2022
+    query = ''
     for week_num in range(1, 53):
         start_date = datetime.strptime(f"{year}-W{week_num:02d}-0", "%Y-W%U-%w") + timedelta(days=1)
         end_date = start_date + timedelta(days=7)
 
-        instruction = f"CREATE TABLE attendances_y{year}_w{week_num} PARTITION OF attendances\n"
-        instruction += f"    FOR VALUES FROM ('{start_date.strftime('%Y-%m-%d')}') TO ('{end_date.strftime('%Y-%m-%d')}');\n"
+        query += f"CREATE TABLE attendances_y{year}_w{week_num} PARTITION OF attendances\n"
+        query += f"    FOR VALUES FROM ('{start_date.strftime('%Y-%m-%d')}') TO ('{end_date.strftime('%Y-%m-%d')}');\n"
+    
+    cursor.execute(query)
+    connection.commit()
+    connection.close()
 
-        file.write(instruction)
+    with open('postgres/scheme/partitions.sql', "w") as file:
+        file.write(query)
+    print('Postgres | Партиции созданы')

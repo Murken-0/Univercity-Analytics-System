@@ -3,7 +3,7 @@ CREATE TABLE schedule(
     id SERIAL PRIMARY KEY,
     class_id BIGINT NOT NULL,
     group_id BIGINT NOT NULL,
-    date_time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    date DATE NOT NULL,
     pair_number INTEGER NOT NULL
 );
 
@@ -32,14 +32,14 @@ CREATE TABLE attendances(
     schedule_id BIGINT NOT NULL,
     student_id BIGINT NOT NULL,
     attended BOOLEAN NOT NULL,
-    schedule_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    schedule_date DATE NOT NULL,
     CONSTRAINT attendances_pkey PRIMARY KEY (id, schedule_date)
 ) PARTITION BY RANGE (schedule_date);
 
 CREATE TABLE students(
     id SERIAL PRIMARY KEY,
     fullname TEXT NOT NULL,
-    code VARCHAR(6) NOT NULL,
+    code VARCHAR(6) UNIQUE NOT NULL,
     group_id BIGINT NOT NULL
 );
 
@@ -133,7 +133,7 @@ AS $$
 DECLARE
     _date TIMESTAMP WITHOUT TIME ZONE;
 BEGIN
-_date := (SELECT date_time FROM schedule WHERE id = schedule_i);
+_date := (SELECT date FROM schedule WHERE id = schedule_i);
 INSERT INTO attendances(student_id, schedule_id, attended, schedule_date)
     VALUES (student_i, schedule_i, attended, _date);
 END
