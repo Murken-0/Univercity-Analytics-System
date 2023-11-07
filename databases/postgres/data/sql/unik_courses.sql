@@ -17,7 +17,15 @@ INSERT INTO specialities(code, title) VALUES
 ('09.03.02','Информационные системы и технологии'),
 ('10.03.01','Информационная безопаность'), 
 ('09.03.01','Информатика и вычислительная техника'),
-('09.03.04','Программная инженерия'); 
+('09.03.04','Программная инженерия');
+ 
+INSERT INTO department_speciality(speciality_id, department_id) VALUES
+(1, 1),
+(1, 2),
+(3, 3),
+(3, 4),
+(4, 5),
+(2, 6);
 
 INSERT INTO groups(title, speciality_id, department_id) VALUES
 ('БСБО-01-20', 1, 1), 
@@ -36,13 +44,6 @@ INSERT INTO groups(title, speciality_id, department_id) VALUES
 ('БИБУ-01-20', 2, 6), 
 ('БОКИ-01-20', 2, 6);
 
-INSERT INTO department_speciality(speciality_id, department_id) VALUES
-(1, 1),
-(1, 2),
-(3, 3),
-(3, 4),
-(4, 5),
-(2, 6);
 
 INSERT INTO class_type(type) VALUES ('practice'), ('lection');
 
