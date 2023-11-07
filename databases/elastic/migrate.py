@@ -11,29 +11,28 @@ conn = psycopg2.connect(
 
 cursor = conn.cursor()
 
-query = "SELECT class_id, file FROM class_materials"
+query = "SELECT id, class_id, file FROM class_materials"
 cursor.execute(query)
 
 rows = cursor.fetchall()
 
 cursor.close()
 conn.close()
-
 es = Elasticsearch(
     hosts=['http://localhost:9200'], 
-    timeout=30,
+    request_timeout=5,
 )
 
 if not es.ping():
     print("Не удалось подключиться к Elasticsearch")
 else:
+    print("Успешное подключение к Elasticsearch")
     for row in rows:
-        class_id = row[0]
-        file = row[1]
-
+        id = row[0]
+        class_id = row[1]
+        file = row[2]
         document = {
             'class_id': class_id,
             'file': file
         }
-
-        es.index(index='materials', id=class_id, body=document)
+        es.index(index='materials', id=id, body=document)

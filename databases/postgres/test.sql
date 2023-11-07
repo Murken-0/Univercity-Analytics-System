@@ -50,3 +50,4 @@ JOIN groups ON groups.id = schedule.group_id
 JOIN students on groups.id = students.group_id;
 
 SELECT id FROM students WHERE group_id IN (1, 2, 5);
+TRUNCATE class_materials;

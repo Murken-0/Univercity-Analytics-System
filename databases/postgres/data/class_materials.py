@@ -1,5 +1,6 @@
 import random
 import psycopg2
+import os
 
 def insert_class_materials():
     materials = ['Агентство по информационной безопасности', 'Аутсорсинг', 
@@ -23,7 +24,7 @@ def insert_class_materials():
 
     query = 'INSERT INTO class_materials(class_id, file) VALUES\n'
     for cl in classes:
-        for _ in range(1, random.randint(2, 5)):
+        for _ in range(1, random.randint(2, 3)):
             text = ' '.join([random.choice(materials) for _ in range(random.randint(3, 15))])
             query += f"({cl}, '{text}'),\n"
     query = query[:-2]
@@ -32,7 +33,10 @@ def insert_class_materials():
     connection.commit()
     connection.close()
 
+    os.chdir(os.path.join(os.getcwd(), 'databases'))
     with open("postgres/data/sql/class_materials.sql", "w") as file:
         file.write(query+ ';')
 
     print('Postgres | Таблица class_materials заполнена')
+
+insert_class_materials()
