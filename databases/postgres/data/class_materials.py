@@ -1,6 +1,5 @@
 import random
 import psycopg2
-import os
 
 def insert_class_materials():
     materials = ['Агентство по информационной безопасности', 'Аутсорсинг', 

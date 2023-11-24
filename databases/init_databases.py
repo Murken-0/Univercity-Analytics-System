@@ -9,7 +9,7 @@ from postgres.data.classes import insert_classes
 from postgres.data.class_materials import insert_class_materials
 from postgres.data.attendances import insert_attendances
 
-from noSQL_migrations.redis import migrate_redis
+from databases.noSQL_migrations.redis_migration import migrate_redis
 from noSQL_migrations.elastic import migrate_elastic
 from noSQL_migrations.mongo import migrate_mongo
 from noSQL_migrations.neo4j import migrate_neo4j

@@ -12,7 +12,7 @@ def migrate_elastic():
 
     cursor = conn.cursor()
 
-    query = "SELECT id, class_id, file FROM class_materials LIMIT 100"
+    query = "SELECT id, class_id, file FROM class_materials"
     cursor.execute(query)
 
     rows = cursor.fetchall()
@@ -28,14 +28,10 @@ def migrate_elastic():
         print("ElasticSearch | Не удалось подключиться ")
         return
     for row in rows:
-        id = row[0]
-        class_id = row[1]
-        file = row[2]
-        document = {
-            'class_id': class_id,
-            'file': file
-        }
-        es.index(index='materials', id=id, body=document)
+        es.index(index='materials', id=row[0], body={
+            'class_id': row[1],
+            'file': row[2]
+        })
     print("ElasticSearch | Миграция завершена")
 
 migrate_elastic()

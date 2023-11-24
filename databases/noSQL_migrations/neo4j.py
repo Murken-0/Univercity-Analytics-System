@@ -92,6 +92,33 @@ def migrate_neo4j():
         neo4j_graph.create(relationship)
     print("Neo4j | group_course перенесены")
 
+    #classes
+    pg_cursor.execute("SELECT id, type_id, title, equipment, course_id FROM classes") 
+    classes = pg_cursor.fetchall()
+    for clas in classes:
+        
+        clas_node= Node("Class", id=clas[0], type='practice' if clas[1] == 1 else 'lection', title=clas[2], equipment=[3])
+        neo4j_graph.create(clas_node)
+
+        course_node = neo4j_graph.nodes.match("Course", id=clas[4]).first()
+        relationship = Relationship(course_node, "HAS_CLASS", clas_node)
+        neo4j_graph.create(relationship)
+
+    #schedule
+    pg_cursor.execute("SELECT id, date, pair_number, class_id, group_id FROM schedule") 
+    schedules = pg_cursor.fetchall()
+    for schedule in schedules:
+        schedule_node = Node("Scheldue", id=schedule[0], date=schedule[1], pair_number=schedule[2])
+        neo4j_graph.create(clas_node)
+
+        clas_node = neo4j_graph.nodes.match("Class", id=schedule[3]).first()
+        relationship = Relationship(schedule_node, "REFERS_TO_CLASS", clas_node)
+        neo4j_graph.create(relationship)
+
+        group_node = neo4j_graph.nodes.match("Group", id=schedule[4]).first()
+        relationship = Relationship(schedule_node, "REFERS_TO_GROUP", group_node)
+        neo4j_graph.create(relationship)
+
     pg_cursor.close()
     pg_conn.close()
     print("Neo4j | Миграция завершена")
