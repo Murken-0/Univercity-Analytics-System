@@ -20,17 +20,13 @@ def go_lab1():
     end_date = input('Дата конца (YYYY-MM-DD): ')
     
     info = get_students_and_shedule(classes)
-    if not info[0]:
+    if not info:
         print('Не найдено расписание для занятий')
         return
 
-    if not info[1]:
-        print('Не найдены студенты по расписанию')
-        return
-
-    students_with_percent = get_attended_percentage(info[0], info[1], start_date, end_date)
+    students_with_percent = get_attended_percentage(info, start_date, end_date)
     if not students_with_percent:
-        print("Не найдено соответствующих занятий данном периоде")
+        print("Ошибка с расчетом процента почещения")
         return
     
     formatted = []

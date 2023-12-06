@@ -6,8 +6,7 @@ def get_students_and_shedule(classes:list) -> list:
     for cl in classes:
         find_students_schedule_query = f"MATCH (c:Class {{id:{cl}}})<-[:REFERS_TO_CLASS]-(s:Scheldue)-[:REFERS_TO_GROUP]->(g:Group)<-[:STUDY_IN]-(st:Student) RETURN st.id as students, s.id as schedules"
         result = neo4j_graph.run(find_students_schedule_query)
-        s = [record['students'] for record in result]
-        sc = [record['schedules'] for record in result]
-        info[0].extend(sc)
-        info[1].extend(s)
+        for record in result:
+            info[0].append(record['students'])
+            info[1].append(record['schedules'])
     return info

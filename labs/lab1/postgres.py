@@ -16,9 +16,9 @@ def get_schedule_by_classes(class_ids:list) -> list:
     return cursor.fetchall()
 
 
-def get_attended_percentage(schedule_ids:list, student_ids:list, start_date:str, end_date:str) -> list:
-    schedules = str(schedule_ids)[1:-1]
-    students = str(student_ids)[1:-1]
+def get_attended_percentage(info:list, start_date:str, end_date:str) -> list:
+    students = str(info[0])[1:-1]
+    schedules = str(info[1])[1:-1]
     
     connection = psycopg2.connect(
         host="localhost",
