@@ -1,5 +1,6 @@
 import psycopg2
 from py2neo import Graph, Node, Relationship
+from datetime import datetime
 
 def migrate_neo4j():
     pg_conn = psycopg2.connect(
@@ -108,7 +109,8 @@ def migrate_neo4j():
     pg_cursor.execute("SELECT id, date, pair_number, class_id, group_id FROM schedule") 
     schedules = pg_cursor.fetchall()
     for schedule in schedules:
-        schedule_node = Node("Scheldue", id=schedule[0], date=schedule[1], pair_number=schedule[2])
+        date_time = schedule[1]
+        schedule_node = Node("Scheldue", id=schedule[0], date=date_time, pair_number=schedule[2])
         neo4j_graph.create(clas_node)
 
         clas_node = neo4j_graph.nodes.match("Class", id=schedule[3]).first()

@@ -33,5 +33,3 @@ def migrate_elastic():
             'file': row[2]
         })
     print("ElasticSearch | Миграция завершена")
-
-migrate_elastic()
