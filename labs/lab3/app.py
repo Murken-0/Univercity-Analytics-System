@@ -8,8 +8,13 @@ app = Flask(__name__)
 @app.route('/', methods=['GET'])
 def get_lab3():
     group = request.args.get('group')
-    courses = go_lab3(group)
-    return jsonify({'group': group, "courses": courses})
+
+    try:
+        courses = go_lab3(group)
+    except ValueError as err:
+        return jsonify({"error": str(err)}), 204
+    
+    return jsonify({'group': group, "courses": courses}), 200
 
 @app.route('/ping', methods=['GET'])
 def ping():

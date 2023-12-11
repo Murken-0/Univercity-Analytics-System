@@ -9,10 +9,13 @@ def get_lab2():
     start_date = request.args.get('start_date')
     end_date = request.args.get('end_date')
 
-    volumes = go_lab2(course, start_date, end_date)
+    try:
+        volumes = go_lab2(course, start_date, end_date)
+    except ValueError as err:
+        return jsonify({"error": str(err)}), 204
     dict_volumes = [{'class_title':volumes[0][i], 'date':volumes[1][i], 'pair_number':volumes[2][i], 'volume':volumes[3][i]} for i in range(len(volumes))]
     
-    return jsonify({'volumes': dict_volumes})
+    return jsonify({'volumes': dict_volumes}), 200
 
 @app.route('/ping', methods=['GET'])
 def ping():

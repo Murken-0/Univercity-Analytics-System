@@ -12,10 +12,13 @@ def get_lab1():
     start_date = request.args.get('start_date')
     end_date = request.args.get('end_date')
 
-    students = go_lab1(phrase, start_date, end_date)
+    try:
+        students = go_lab1(phrase, start_date, end_date)
+    except ValueError as err:
+        return jsonify({"error": str(err)}), 204
     dict_students = [{'fullname':st[0], 'code':st[1], 'percent':st[2]} for st in students]
 
-    return jsonify({'students': dict_students})
+    return jsonify({'students': dict_students}), 200
 
 @app.route('/ping', methods=['GET'])
 def ping():
