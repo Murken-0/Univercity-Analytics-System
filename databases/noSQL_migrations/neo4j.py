@@ -1,6 +1,5 @@
 import psycopg2
 from py2neo import Graph, Node, Relationship
-from datetime import datetime
 
 def migrate_neo4j():
     pg_conn = psycopg2.connect(
@@ -75,7 +74,7 @@ def migrate_neo4j():
     pg_cursor.execute("SELECT id, title, scheduled_hours, department_id FROM courses")
     courses = pg_cursor.fetchall()
     for course in courses:
-        course_node = Node("Course", id=course[0], code=course[2])
+        course_node = Node("Course", id=course[0], title=course[1], hours=course[2])
         neo4j_graph.create(course_node)
 
         department_node = neo4j_graph.nodes.match("Department", id=course[3]).first()
@@ -97,20 +96,20 @@ def migrate_neo4j():
     pg_cursor.execute("SELECT id, type_id, title, equipment, course_id FROM classes") 
     classes = pg_cursor.fetchall()
     for clas in classes:
-        
-        clas_node= Node("Class", id=clas[0], type='practice' if clas[1] == 1 else 'lection', title=clas[2], equipment=[3])
+        clas_node= Node("Class", id=clas[0], type='practice' if clas[1] == 1 else 'lection', title=clas[2], equipment=clas[3])
         neo4j_graph.create(clas_node)
 
         course_node = neo4j_graph.nodes.match("Course", id=clas[4]).first()
         relationship = Relationship(course_node, "HAS_CLASS", clas_node)
         neo4j_graph.create(relationship)
+    print("Neo4j | classes перенесены")
 
     #schedule
     pg_cursor.execute("SELECT id, date, pair_number, class_id, group_id FROM schedule") 
     schedules = pg_cursor.fetchall()
     for schedule in schedules:
         date_time = schedule[1]
-        schedule_node = Node("Scheldue", id=schedule[0], date=date_time, pair_number=schedule[2])
+        schedule_node = Node("Schedule", id=schedule[0], date=date_time, pair_number=schedule[2])
         neo4j_graph.create(clas_node)
 
         clas_node = neo4j_graph.nodes.match("Class", id=schedule[3]).first()
@@ -120,6 +119,7 @@ def migrate_neo4j():
         group_node = neo4j_graph.nodes.match("Group", id=schedule[4]).first()
         relationship = Relationship(schedule_node, "REFERS_TO_GROUP", group_node)
         neo4j_graph.create(relationship)
+    print("Neo4j | schedule перенесены")
 
     pg_cursor.close()
     pg_conn.close()

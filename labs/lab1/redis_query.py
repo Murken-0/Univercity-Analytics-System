@@ -6,4 +6,5 @@ def get_student_data(id:str)->str:
         port=6379,
         decode_responses=True
     )
-    return r.hmget(id, "fullname", "code")
+    result = r.hmget(id, "fullname", "code")
+    return result[0], result[1]

@@ -20,8 +20,7 @@ def migrate_elastic():
     cursor.close()
     conn.close()
     es = Elasticsearch(
-        hosts=['http://localhost:9200'], 
-        request_timeout=5,
+        hosts=['http://localhost:9200']
     )
 
     if not es.ping():

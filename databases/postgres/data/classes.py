@@ -2,9 +2,6 @@ import random
 import psycopg2
 
 def insert_classes():
-    equipments = ['Ноутбук', 'Проектор', 'Интерактивная доска', 'Лабораторный стол', 'Сервер', 
-    '3D-принтер', 'Робототехнический комплект', 'Электронный осциллограф', 'Шлем виртуальной реальности']
-
     connection = psycopg2.connect(
         host="localhost",
         port="5432",
@@ -18,13 +15,11 @@ def insert_classes():
 
     query = 'INSERT INTO classes(type_id, title, equipment, course_id) VALUES\n'
     for course in courses:
-        l_eq = ' '.join([random.choice(equipments) for _ in range(random.randint(1, 5))])
-        p_eq = ' '.join([random.choice(equipments) for _ in range(random.randint(1, 5))])
         for i in range(1, 9):
             l_name = f"Лекция {i}"
-            query += f"(2, '{l_name}', '{l_eq}', {course}),\n"
+            query += f"(2, '{l_name}', '{random.choice([True, False])}', {course}),\n"
             p_name = f"Практика {i}"
-            query += f"(1, '{p_name}', '{p_eq}', {course}),\n"
+            query += f"(1, '{p_name}', '{random.choice([True, False])}', {course}),\n"
     query = query[:-2]
 
     cursor.execute(query)

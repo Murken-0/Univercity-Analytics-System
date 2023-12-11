@@ -18,10 +18,11 @@ import os
 
 os.chdir(os.path.join(os.getcwd(), 'databases'))
 
-#postgres
+#postgres_scheme
 init_posgres()
 create_partitions()
 
+#postgres_data
 insert_unik_courses()
 insert_students()
 insert_group_course()

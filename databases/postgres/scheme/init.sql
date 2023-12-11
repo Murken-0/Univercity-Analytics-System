@@ -78,7 +78,7 @@ CREATE TABLE classes(
     id SERIAL PRIMARY KEY,
     type_id INTEGER NOT NULL,
     title TEXT NOT NULL,
-    equipment TEXT NOT NULL,
+    equipment BOOLEAN NOT NULL,
     course_id BIGINT NOT NULL
 );
 
