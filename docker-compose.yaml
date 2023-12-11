@@ -105,7 +105,7 @@ services:
     volumes:
       - lab1_vol:/app
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3001/ping"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider localhost:3001/ping || exit 1"]
       interval: 10s
       timeout: 10s
       retries: 3
@@ -121,7 +121,7 @@ services:
     volumes:
       - lab2_vol:/app
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3002/ping"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider localhost:3002/ping || exit 1"]
       interval: 10s
       timeout: 10s
       retries: 3
@@ -137,7 +137,7 @@ services:
     volumes:
       - lab3_vol:/app
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3003/ping"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider localhost:3003/ping || exit 1"]
       interval: 10s
       timeout: 10s
       retries: 3
