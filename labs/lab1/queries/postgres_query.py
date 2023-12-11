@@ -5,7 +5,7 @@ def get_attended_percentage(students:list, schedules:list, start_date:str, end_d
     schedules_str = str(schedules)[1:-1]
     
     connection = psycopg2.connect(
-        host="localhost",
+        host="postgres",
         port="5432",
         database="practice",
         user="admin",

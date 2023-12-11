@@ -2,7 +2,7 @@ from elasticsearch import Elasticsearch
 
 def search_materials(user_input:str) -> list:
     es = Elasticsearch(
-        hosts=['http://localhost:9200']
+        hosts=['http://elasticsearch:9200']
     )
 
     query = {

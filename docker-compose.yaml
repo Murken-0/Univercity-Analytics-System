@@ -93,6 +93,55 @@ services:
       interval: 10s
       timeout: 10s
       retries: 3
+  
+  lab1:
+    image: lab1:1.0
+    container_name: lab1
+    restart: always
+    networks:
+      - databases_net
+    ports:
+      - 3001:3001
+    volumes:
+      - lab1_vol:/app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+
+  lab2:
+    image: lab2:1.0
+    container_name: lab2
+    restart: always
+    networks:
+      - databases_net
+    ports:
+      - 3002:3002
+    volumes:
+      - lab2_vol:/app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3002/ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+
+  lab3:
+    image: lab3:1.0
+    container_name: lab3
+    restart: always
+    networks:
+      - databases_net
+    ports:
+      - 3003:3003
+    volumes:
+      - lab3_vol:/app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3003/ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+
 
 volumes:
   postgres_vol:
@@ -100,6 +149,9 @@ volumes:
   redis_vol:
   neo4j_vol:
   elasticsearch_vol:
+  lab1_vol:
+  lab2_vol:
+  lab3_vol:
 
 networks:
   databases_net:

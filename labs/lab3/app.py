@@ -1,6 +1,19 @@
-from neo4j_query import get_courses_schedules, get_students
-from postgres_query import get_students_hours
-from redis_query import get_student_data
+from flask import Flask, jsonify, request
+from queries.neo4j_query import get_courses_schedules, get_students
+from queries.postgres_query import get_students_hours
+from queries.redis_query import get_student_data
+
+app = Flask(__name__)
+
+@app.route('/', methods=['GET'])
+def get_lab3():
+    group = request.args.get('group')
+    courses = go_lab3(group)
+    return jsonify({'group': group, "courses": courses})
+
+@app.route('/ping', methods=['GET'])
+def ping():
+    return jsonify(success=True)
 
 def go_lab3(group:str) -> list:
     student_ids = get_students(group)
@@ -24,3 +37,6 @@ def go_lab3(group:str) -> list:
         courses.append({"title":title, "planned_hours":planned, "students": students})
 
     return courses
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=3003)

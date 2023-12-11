@@ -1,7 +1,7 @@
 from py2neo import Graph
 
 def get_students_and_shedule(classes:list) -> list:
-    neo4j_graph = Graph("bolt://localhost:7687")
+    neo4j_graph = Graph("bolt://neo4j:7687")
     students = []
     schedules = []
     for cl in classes:

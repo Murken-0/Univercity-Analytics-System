@@ -5,7 +5,7 @@ def get_students_hours(students:list, schedules:list) -> list:
     schedules_str = str(schedules)[1:-1]
 
     connection = psycopg2.connect(
-        host="localhost",
+        host="postgres",
         port="5432",
         database="practice",
         user="admin",
