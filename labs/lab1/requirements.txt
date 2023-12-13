@@ -3,3 +3,4 @@ py2neo
 psycopg2-binary
 redis
 flask
+requests

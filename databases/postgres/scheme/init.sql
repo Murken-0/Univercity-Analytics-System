@@ -93,6 +93,21 @@ CREATE TABLE universities(
     title TEXT NOT NULL
 );
 
+CREATE TABLE users(
+    id SERIAL PRIMARY KEY,
+    username TEXT NOT NULL,
+    password TEXT NOT NULL
+);
+
+CREATE TABLE tokens(
+    id SERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    token TEXT NOT NULL,
+    expire_at TIMESTAMP NOT NULL
+);
+
+ALTER TABLE
+    tokens ADD CONSTRAINT tokens_user_id_foreign FOREIGN KEY(user_id) REFERENCES users(id);
 ALTER TABLE
     department_speciality ADD CONSTRAINT department_speciality_speciality_id_foreign FOREIGN KEY(speciality_id) REFERENCES specialities(id);
 ALTER TABLE

@@ -39,3 +39,10 @@ SET s.name = 'Muraviev V.R.';
 MATCH (n) DETACH DELETE n;
 
 ##ELASTIC SEARCH
+
+/register -> auth/register
+/login -> auth/login
+/validate -> auth/validate
+/lab1 -> lab1/ (+ping)
+/lab2 -> lab2/ (+ping)
+/lab3 -> lab3/ (+ping)
