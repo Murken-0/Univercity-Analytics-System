@@ -35,7 +35,7 @@ def get_lab2():
         volumes = go_lab2(course, start_date, end_date)
     except ValueError as err:
         return jsonify({"error": str(err)}), 204
-    dict_volumes = [{'class_title':volumes[0][i], 'date':volumes[1][i], 'pair_number':volumes[2][i], 'volume':volumes[3][i]} for i in range(len(volumes))]
+    dict_volumes = [{'class_title':volumes[0][i], 'date':volumes[1][i], 'pair_number':volumes[2][i], 'volume':volumes[3][i]} for i in range(len(volumes[0]))]
     
     return jsonify({'volumes': dict_volumes}), 200
 
