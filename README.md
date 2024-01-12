@@ -15,7 +15,7 @@ The project implements the following technologies:
     - Mongo
     - Redis
 3. Python:
-    - Flask Web Api (Endpoints)
+    - Flask Web Api (endpoints)
     - Console Apps (data generation)
 4. Other:
     - Bearer Autentification on JWT tokens
