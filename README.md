@@ -9,14 +9,14 @@ The project implements the following technologies:
     - Dockerfiles
     - Docker-compose (local archestration)
 2. Databases:
-  - Postgres
-  - Neo4j
-  - ElasticSearch
-  - Mongo
-  - Redis
+    - Postgres
+    - Neo4j
+    - ElasticSearch
+    - Mongo
+    - Redis
 3. Python:
-  - Flask Web Api (Endpoints)
-  - Console Apps (data generation)
+    - Flask Web Api (Endpoints)
+    - Console Apps (data generation)
 4. Other:
-  - Bearer Autentification on JWT tokens
-  - Nginx gateway (requests redirection)
+    - Bearer Autentification on JWT tokens
+    - Nginx gateway (requests redirection)
