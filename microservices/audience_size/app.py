@@ -1,11 +1,11 @@
 from flask import Flask, jsonify, request
 from functools import wraps
 import requests
-from queries.neo4j_query import get_class_volumes
+from queries.main import get_audience_size
 
 app = Flask(__name__)
 
-def token_required(f):
+def authorized(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         token = request.headers.get('Authorization')
@@ -25,35 +25,19 @@ def token_required(f):
     return decorated_function
 
 @app.route('/', methods=['GET'])
-@token_required
+@authorized
 def get_lab2():
     course = request.args.get('course')
     start_date = request.args.get('start_date')
     end_date = request.args.get('end_date')
 
     try:
-        volumes = go_lab2(course, start_date, end_date)
+        volumes = get_audience_size(course, start_date, end_date)
     except ValueError as err:
         return jsonify({"error": str(err)}), 204
     dict_volumes = [{'class_title':volumes[0][i], 'date':volumes[1][i], 'pair_number':volumes[2][i], 'volume':volumes[3][i]} for i in range(len(volumes[0]))]
     
     return jsonify({'volumes': dict_volumes}), 200
-
-@app.route('/ping', methods=['GET'])
-def ping():
-    return jsonify(success=True)
-
-def go_lab2(course:str, start_date:str, end_date:str) -> list:
-    info = get_class_volumes(course, start_date, end_date)
-    if not info[0]:
-        raise ValueError('Не найдено занятий по курсу')
-    if not info[1]:
-        raise ValueError('Не найдено расписание для занятий')
-    if not info[2]:
-        raise ValueError('Не найдено расписание для занятий')
-    if not info[3]:
-        raise ValueError('Не найдены студенты')
-    return info
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=3002)
