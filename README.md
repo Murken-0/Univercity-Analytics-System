@@ -5,18 +5,18 @@ This project implements the university information system, and as a user can you
 You can interract with the system trough the API. 
 
 The project implements the following technologies:
-- Docker:
-  1. Dockerfiles
-  2. Docker-compose (local archestration)
-- Databases:
-  1. Postgres
-  2. Neo4j
-  3. ElasticSearch
-  4. Mongo
-  5. Redis
-- Python:
-  1. Flask Web Api (Endpoints)
-  2. Console Apps (data generation)
-- Other:
-  1. Bearer Autentification on JWT tokens
-  2. Nginx gateway (requests redirection)
+1. Docker:
+  - Dockerfiles
+  - Docker-compose (local archestration)
+2. Databases:
+  - Postgres
+  - Neo4j
+  - ElasticSearch
+  - Mongo
+  - Redis
+3. Python:
+  - Flask Web Api (Endpoints)
+  - Console Apps (data generation)
+4. Other:
+  - Bearer Autentification on JWT tokens
+  - Nginx gateway (requests redirection)
