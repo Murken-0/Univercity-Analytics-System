@@ -6,8 +6,8 @@ You can interract with the system trough the API.
 
 The project implements the following technologies:
 1. Docker:
-  - Dockerfiles
-  - Docker-compose (local archestration)
+    - Dockerfiles
+    - Docker-compose (local archestration)
 2. Databases:
   - Postgres
   - Neo4j
