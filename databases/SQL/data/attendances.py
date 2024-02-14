@@ -2,7 +2,7 @@ import random
 import psycopg2
 
 def insert_attendances():
-    file = open("postgres/data/sql/attendances.sql", "a")
+    file = open("SQL/data/sql/attendances.sql", "a")
     connection = psycopg2.connect(
         host="localhost",
         port="5432",

@@ -2,7 +2,7 @@ import psycopg2
 
 def init_posgres():
     query = ''
-    with open("postgres/scheme/init.sql") as file:
+    with open("SQL/scheme/init.sql") as file:
         query = file.read()
 
     connection = psycopg2.connect(

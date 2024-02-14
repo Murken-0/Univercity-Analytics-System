@@ -2,7 +2,7 @@ import psycopg2
 
 def insert_unik_courses():
     query = ''
-    with open("postgres/data/sql/unik_courses.sql") as file:
+    with open("SQL/data/sql/unik_courses.sql") as file:
         query = file.read()
 
     connection = psycopg2.connect(

@@ -28,7 +28,7 @@ def insert_group_course():
     connection.commit()
     connection.close()
 
-    with open("postgres/data/sql/group_course.sql", "w") as file:
+    with open("SQL/data/sql/group_course.sql", "w") as file:
         file.write(query+ ';')
     
     print('Postgres | Таблица group_course заполнена')

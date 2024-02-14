@@ -24,6 +24,6 @@ def create_partitions():
     connection.commit()
     connection.close()
 
-    with open('postgres/scheme/partitions.sql', "w") as file:
+    with open('SQL/scheme/partitions.sql', "w") as file:
         file.write(query)
     print('Postgres | Партиции созданы')

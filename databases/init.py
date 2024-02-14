@@ -32,9 +32,9 @@ insert_schedule()
 insert_attendances()
 
 #migrations
-migrate_elastic()
-migrate_mongo()
-migrate_redis()
-migrate_neo4j()
+#migrate_elastic()
+#migrate_mongo()
+#migrate_redis()
+#migrate_neo4j()
 
 print("Базы данных проинициализированы")

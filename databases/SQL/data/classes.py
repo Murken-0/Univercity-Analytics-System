@@ -26,7 +26,7 @@ def insert_classes():
     connection.commit()
     connection.close()
 
-    with open("postgres/data/sql/classes.sql", "w") as file:
+    with open("SQL/data/sql/classes.sql", "w") as file:
         file.write(query+ ';')
     
     print('Postgres | Таблица classes заполнена')

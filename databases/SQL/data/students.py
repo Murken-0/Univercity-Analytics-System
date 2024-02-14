@@ -33,7 +33,7 @@ def insert_students():
     connection.commit()
     connection.close()
 
-    with open("postgres/data/sql/students.sql", "w") as file:
+    with open("SQL/data/sql/students.sql", "w") as file:
         file.write(query + ';')
 
     print('Postgres | Таблица students заполнена')

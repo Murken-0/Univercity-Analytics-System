@@ -32,7 +32,7 @@ def insert_class_materials():
     connection.commit()
     connection.close()
 
-    with open("postgres/data/sql/class_materials.sql", "w") as file:
+    with open("SQL/data/sql/class_materials.sql", "w") as file:
         file.write(query+ ';')
 
     print('Postgres | Таблица class_materials заполнена')
