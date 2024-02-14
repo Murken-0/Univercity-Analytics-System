@@ -16,6 +16,17 @@ services:
       -c wal_level=logical
       -c max_wal_senders=1
       -c max_replication_slots=1
+  
+  elasticsearch:
+    image: bitnami/elasticsearch:8.10.2
+    container_name: elasticsearch
+    environment:
+      discovery.type: single-node
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch_vol:/usr/share/elasticsearch/data
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.2
@@ -88,9 +99,8 @@ services:
       - bash
       - -c
       - |
-        echo "Installing connector plugins"
         confluent-hub install --no-prompt debezium/debezium-connector-postgresql:2.2.1
-        echo "Launching Kafka Connect worker"
+        confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:14.0.12
         /etc/confluent/docker/run
 
   control-center:
@@ -117,3 +127,5 @@ services:
 
 volumes:
   postgres_vol:
+  elasticsearch_vol:
+  redis_vol:
