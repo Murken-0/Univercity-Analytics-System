@@ -101,8 +101,15 @@ services:
       - |
         confluent-hub install --no-prompt debezium/debezium-connector-postgresql:2.2.1
         confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:14.0.12
+        confluent-hub install --no-prompt jcustenborder/kafka-connect-redis:1.0.0
         /etc/confluent/docker/run
-
+  redis:
+    image: redis:7.2.1-alpine
+    container_name: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_vol:/data
   control-center:
     image: confluentinc/cp-enterprise-control-center:7.5.2
     hostname: control-center
