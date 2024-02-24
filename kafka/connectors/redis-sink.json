@@ -1,20 +1,15 @@
 {
-    "name": "RedisSinkConnectorConnector_0",
+    "name": "redis-sink",
     "config": {
-        "name": "RedisSinkConnectorConnector_0",
-        "connector.class": "com.redis.kafka.connect.RedisSinkConnector",
-        "topics": "postgres.public.students",
-        "redis.host": "redis",
-        "redis.port": "6379",
-        "redis.command" : "SET",
-        "transforms": "ExtractAfter, InsertRedisKey",
-        "transforms.ExtractAfter.type": "org.apache.kafka.connect.transforms.ExtractField$Value",
-        "transforms.ExtractAfter.field": "after",
-        "transforms.InsertRedisKey.type": "org.apache.kafka.connect.transforms.ValueToKey",
-        "transforms.InsertRedisKey.fields": "id",
-        "transforms.InsertRedisKey.target.type": "org.apache.kafka.connect.transforms.HoistField$Key",
-        "transforms.InsertRedisKey.target.field": "fullname",
-        "errors.log.enable" : "true",
-        "errors.log.include.messages" : "true"
+      "name": "redis-sink",
+      "connector.class": "io.lenses.streamreactor.connect.redis.sink.RedisSinkConnector",
+      "tasks.max": "1",
+      "topics": "postgres.public.students",
+      "connect.redis.host": "redis",
+      "connect.redis.port": "6379",
+      "connect.redis.kcql": "SELECT fullname, code, group_id FROM postgres.public.students PK id",
+      "transforms": "ExtractAfter",
+      "transforms.ExtractAfter.type": "org.apache.kafka.connect.transforms.ExtractField$Value",
+      "transforms.ExtractAfter.field": "after"
     }
-}
+  }
