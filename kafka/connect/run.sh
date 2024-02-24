@@ -12,4 +12,4 @@ confluent-hub install confluentinc/kafka-connect-elasticsearch:latest \
 
 cp /etc/connect/kafka-connect-redis-assembly-6.0.3.jar $COMPONENT_DIR/kafka-connect-redis-assembly-6.0.3.jar
 
-/etc/confluent/docker/run /etc/connect/connect.properties
+/etc/confluent/docker/run
