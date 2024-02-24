@@ -169,6 +169,3 @@ volumes:
   lab2_vol:
   lab3_vol:
   auth_vol:
-
-networks:
-  databases_net:
