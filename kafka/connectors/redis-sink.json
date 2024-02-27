@@ -4,7 +4,7 @@
       "name": "redis-sink",
       "connector.class": "io.lenses.streamreactor.connect.redis.sink.RedisSinkConnector",
       "tasks.max": "1",
-      "topics": "postgres.public.students",
+      "topics": "students",
       "connect.redis.host": "redis",
       "connect.redis.port": "6379",
       "connect.redis.kcql": "SELECT fullname, code, group_id FROM postgres.public.students PK id",

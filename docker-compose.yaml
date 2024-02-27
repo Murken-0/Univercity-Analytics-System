@@ -36,6 +36,17 @@ services:
     volumes:
       - redis_vol:/data
 
+  neo4j:
+    image: neo4j:5.12.0
+    container_name: neo4j
+    environment:
+      NEO4J_AUTH: none
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j_vol:/data
+
   zookeeper:
     image: confluentinc/cp-zookeeper:7.6.0
     container_name: zookeeper
@@ -133,3 +144,4 @@ volumes:
   postgres_vol:
   elasticsearch_vol:
   redis_vol:
+  neo4j_vol:

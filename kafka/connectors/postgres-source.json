@@ -9,6 +9,7 @@
       "database.port": "5432",
       "database.server.name": "postgres",
       "database.user": "admin",
+      "snapshot.mode" : "initial_only",
       "plugin.name": "pgoutput",
       "tasks.max": "1",
       "topic.creation.default.cleanup.policy": "delete",
@@ -16,10 +17,10 @@
       "topic.creation.default.replication.factor": "1",
       "topic.creation.default.retention.ms": "604800000",
       "topic.creation.enable": "true",
-      "topic.prefix": "postgres",
-      "transforms": "route",
-      "transforms.route.type": "io.debezium.transforms.ByLogicalTableRouter",
-      "transforms.route.topic.regex": "public.(.*)",
-      "transforms.route.topic.replacement": "$1"
+      "topic.prefix": "pg",
+      "transforms": "dropTopicPrefix",
+      "transforms.dropTopicPrefix.type" : "org.apache.kafka.connect.transforms.RegexRouter",
+      "transforms.dropTopicPrefix.regex" : "pg.public.(.*)",
+      "transforms.dropTopicPrefix.replacement": "$1"
     }
 }

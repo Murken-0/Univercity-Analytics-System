@@ -1,0 +1,22 @@
+{
+    "name": "neo4j-sink",
+    "config": {
+        "name" : "neo4j-sink",
+        "connector.class" : "streams.kafka.connect.sink.Neo4jSinkConnector",
+        "tasks.max" : "1",
+        "topics" : "departments,specialities,department_speciality,groups,students,courses,group_course,classes,schedule",
+        "neo4j.server.uri" : "bolt://neo4j:7687",
+        "neo4j.topic.cypher.departments" : "CREATE (d:Department {id: event.id, code: event.code, title: event.title})",
+        "neo4j.topic.cypher.specialities" : "CREATE (s:Speciality {id: event.id, code: event.code, title: event.title})",
+        "neo4j.topic.cypher.department_speciality" : "MATCH (d:Department {id: event.department_id}), (s:Speciality {id: event.speciality_id}) CREATE (d)-[:HAS_SPECIALITY]->(s)",
+        "neo4j.topic.cypher.groups" : "MATCH (d:Department {id: event.department_id}), (s:Speciality {id: event.speciality_id}) CREATE (d)-[:OFFERS_GROUP]->(g:Group {id: event.id, title: event.title})-[:HAS_SPECIALITY]->(s)",
+        "neo4j.topic.cypher.students" : "MATCH (g:Group {id: event.group_id}) CREATE (s:Student {id: event.id, fullname: event.fullname, code: event.code})-[:STUDY_IN]->(g)",
+        "neo4j.topic.cypher.courses" : "MATCH (g:Department {id: event.department_id}) CREATE (d)-[:HAS_COURSE]->(c:Course {id: event.id, title: event.title, scheduled_hours: event.scheduled_hours})",
+        "neo4j.topic.cypher.group_course" : "MATCH (g:Group {id: event.group_id}), (c:Course {id: event.course_id}) CREATE (g)-[:STUDY_COURSE]->(c)",
+        "neo4j.topic.cypher.classes" : "MATCH (c:Course {id: event.course_id}) CREATE (c)-[:HAS_CLASS]->(cl:Class {id: event.id, title: event.title, type_id: event.type_id, equipment: event.equipment})",
+        "neo4j.topic.cypher.schedule" : "MATCH (cl:Class {id: event.class_id}), (g:Group {id: event.group_id}) CREATE (cl)<-[:REFERS_TO_CLASS]-(sc:Schedule {id: event.id, date: event.date, pair_number: event.pair_number})-[:REFERS_TO_GROUP]->(g)",
+        "transforms": "ExtractAfter",
+        "transforms.ExtractAfter.type": "org.apache.kafka.connect.transforms.ExtractField$Value",
+        "transforms.ExtractAfter.field": "after"
+    }
+}
