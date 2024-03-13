@@ -16,18 +16,55 @@ services:
       -c wal_level=logical
       -c max_wal_senders=1
       -c max_replication_slots=1
-
-  mongo:
-    image: mongo:7.0
-    container_name: mongo
-    restart: always
+  
+  neo4j:
+    image: neo4j:5.12.0
+    container_name: neo4j
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: admin
+      NEO4J_AUTH: none
     ports:
-      - 27017:27017
+      - "7474:7474"
+      - "7687:7687"
     volumes:
-      - mongo_vol:/data/db
+      - neo4j_vol:/data
+
+  influxdb:
+    image: influxdb:2.7.5-alpine
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb_vol:/var/lib/influxdb2
+    environment:
+      - INFLUXDB_DB=db0
+      - INFLUXDB_ADMIN_USER=admin
+      - INFLUXDB_ADMIN_PASSWORD=admin
+  
+  telegraf:
+    image: telegraf:1.29.5-alpine
+    container_name: telegraf
+    depends_on:
+      - influxdb
+    volumes:
+      - ./kafka/telegraf/mytelegraf.conf:/etc/telegraf/telegraf.conf
+    environment:
+      - INFLUXDB_URL=http://influxdb:8086
+      - INFLUXDB_USERNAME=admin
+      - INFLUXDB_PASSWORD=admin
+
+  grafana:
+    image: grafana/grafana:10.0.12-ubuntu
+    container_name: grafana
+    ports:
+      - '3000:3000'
+    volumes:
+      - grafana_vol:/var/lib/grafana
+      - ./kafka/grafana:/etc/grafana/provisioning
+    depends_on:
+      - influxdb
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.6.0
