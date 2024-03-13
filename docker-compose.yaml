@@ -16,36 +16,18 @@ services:
       -c wal_level=logical
       -c max_wal_senders=1
       -c max_replication_slots=1
-  
-  elasticsearch:
-    image: bitnami/elasticsearch:8.10.2
-    container_name: elasticsearch
-    environment:
-      discovery.type: single-node
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-    volumes:
-      - elasticsearch_vol:/usr/share/elasticsearch/data
-  
-  redis:
-    image: redis:7.2.1-alpine
-    container_name: redis
-    ports:
-      - 6379:6379
-    volumes:
-      - redis_vol:/data
 
-  neo4j:
-    image: neo4j:5.12.0
-    container_name: neo4j
+  mongo:
+    image: mongo:7.0
+    container_name: mongo
+    restart: always
     environment:
-      NEO4J_AUTH: none
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
     ports:
-      - "7474:7474"
-      - "7687:7687"
+      - 27017:27017
     volumes:
-      - neo4j_vol:/data
+      - mongo_vol:/data/db
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.6.0
@@ -145,3 +127,6 @@ volumes:
   elasticsearch_vol:
   redis_vol:
   neo4j_vol:
+  influxdb_vol:
+  grafana_vol:
+  mongo_vol:
