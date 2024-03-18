@@ -1,0 +1,15 @@
+{
+    "name": "redis-sink",
+    "config": {
+      "name": "redis-sink",
+      "connector.class": "io.lenses.streamreactor.connect.redis.sink.RedisSinkConnector",
+      "tasks.max": "1",
+      "topics": "students",
+      "connect.redis.host": "redis",
+      "connect.redis.port": "6379",
+      "connect.redis.kcql": "SELECT fullname, code, group_id FROM postgres.public.students PK id",
+      "transforms": "ExtractAfter",
+      "transforms.ExtractAfter.type": "org.apache.kafka.connect.transforms.ExtractField$Value",
+      "transforms.ExtractAfter.field": "after"
+    }
+  }

@@ -30,7 +30,7 @@ services:
       - "7687:7687"
     volumes:
       - neo4j_vol:/data
-  
+
   influxdb:
     image: influxdb:2.7.5-alpine
     container_name: influxdb

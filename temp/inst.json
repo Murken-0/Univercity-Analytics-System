@@ -1,0 +1,37 @@
+{
+    "before": null,
+    "after": {
+      "pg.public.institutes.Value": {
+        "id": 1,
+        "title": "ИКБ",
+        "university_id": 1
+      }
+    },
+    "source": {
+      "version": "2.4.2.Final",
+      "connector": "postgresql",
+      "name": "pg",
+      "ts_ms": 1710789272794,
+      "snapshot": {
+        "string": "first_in_data_collection"
+      },
+      "db": "mydb",
+      "sequence": {
+        "string": "[null,'52522496']"
+      },
+      "schema": "public",
+      "table": "institutes",
+      "txId": {
+        "long": 793
+      },
+      "lsn": {
+        "long": 52522496
+      },
+      "xmin": null
+    },
+    "op": "r",
+    "ts_ms": {
+      "long": 1710789282786
+    },
+    "transaction": null
+  }
