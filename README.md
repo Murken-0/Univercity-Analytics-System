@@ -7,7 +7,7 @@ You can interract with the system trough the API.
 The project implements the following technologies:
 1. Docker:
     - Dockerfiles
-    - Docker-compose (local archestration)
+    - Docker-compose
 2. Databases:
     - Postgres
     - Neo4j
@@ -19,4 +19,4 @@ The project implements the following technologies:
     - Console Apps (data generation)
 4. Other:
     - Bearer Autentification on JWT tokens
-    - Nginx gateway (requests redirection)
+    - Nginx gateway (proxying)
